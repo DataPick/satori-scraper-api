@@ -4,10 +4,11 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const schedule = require('node-schedule');
+const RTM = require('satori-sdk-js');
 
 const config = require('./models/config');
 
-const query = require('./controllers/query');
+const page = require('./controllers/page');
 const item = require('./controllers/item');
 const scraper = require('./controllers/scraper'); 
 const satori = require('./controllers/satori');
@@ -17,9 +18,9 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.dbUrl, {server: {socketOptions: {keepAlive: 120}}});
 
 
-
 // set up task schedulers
-var testSchedule = schedule.scheduleJob("* * * * * *", scraper.scheduleTest);
+scraper.findUpdates('test');
+// var testSchedule = schedule.scheduleJob("*/1 * * * *", scraper.scheduleTest);
 // var minuteSchedule = schedule.scheduleJob("*/1 * * * *", scraper.scheduleTest);
 //var hourlySchedule = schedule.scheduleJob("*/1 * * *", scraper.scheduleHourly);
 //var dailySchedule = schedule.scheduleJob("*/1 * *", scraper.scheduleDaily);
@@ -49,10 +50,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //================================================
 
 // routes
-router.route('/queries')
-    .post(query.createQuery, item.createItemsFromQuery, satori.publishUpdates)
-    .post(query.createQuery)
-    .get(query.getQueries)
+router.route('/pages')
+    .post(page.createPage, item.createItemsFromPage, satori.publishNewItems)
+    .get(page.getPages)
 
 app.use('/', router);
 

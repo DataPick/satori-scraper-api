@@ -1,26 +1,57 @@
-const RTMClient = require('satori-rtm-sdk');
+const config = require('../models/config');
+const RTM = require('satori-sdk-js');
 
-exports.publishUpdates = (req, res, next) => {
-    var rtm = new RTMClient(req.body.query.channel.url, req.body.query.channel.key);
+// set up satori connection
+var roleSecretProvider = RTM.roleSecretAuthProvider(config.role, config.roleSecretKey);
+
+var rtm = new RTM(config.endpoint, config.appkey, {
+  authProvider: roleSecretProvider,
+});
+
+rtm.start();
+
+exports.publishNewItems = (req, res, next) => {
 
     // create a new subscription with "data-channel" name
     //var channel = rtm.subscribe("data-channel", RTM.SubscriptionMode.SIMPLE);
 
-    // client enters 'connected' state
-    rtm.on("enter-connected", function() {
-        req.body.items.forEach(function(item) {
+    req.body.items.forEach(function(item) {
 
-            var data = item.fields;
-            data._url = req.body.query.url;
+        var message = {
+            name: item.name,
+            url: item.url,
+            fields: item.fields
+        };
 
-            rtm.publish("DataPick", data);
+        rtm.publish(config.channel, message);
 
-            console.log('yo');
 
-        });
-
-        return res.sendStatus(200);
     });
 
-    rtm.start()
+    return res.sendStatus(200);
+};
+
+exports.publishNewItem = (item) => {
+
+    var newItem = {
+        name: item.name,
+        url: item.url,
+        fields: item.fields
+    };
+
+    rtm.publish(config.channel, newItem);
+};
+
+
+exports.publishUpdate = (item, updates) => {
+
+    var message = {
+        name: item.name,
+        url: item.url,
+        fields: item.fields,
+        updates: updates
+    };
+
+    rtm.publish(config.channel, message);
+
 };

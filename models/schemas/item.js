@@ -3,16 +3,13 @@ const Schema = mongoose.Schema;
 
 var itemSchema = new Schema({
         url: {type: String, required: true},
-        identifier: {type: String, required: true},
+        name: {type: String, required: true},
+        image: {type: String},
         fields: [{
             key: String,
             value: String,
             _id: false
-        }],
-        channel: {
-            url: String,
-            key: String
-        }
+        }]
     },
     {
         toObject: {getters: true},
@@ -23,7 +20,7 @@ var itemSchema = new Schema({
     }
 );
 
-itemSchema.index({url: 1, identifier: 1});
+itemSchema.index({url: 1, name: 1, image: 1});
 
 var Item = mongoose.model('Item', itemSchema);
 
