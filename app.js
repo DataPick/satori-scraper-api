@@ -20,6 +20,7 @@ mongoose.connect(config.dbUrl, {server: {socketOptions: {keepAlive: 120}}});
 
 // set up task schedulers
 scraper.findUpdates('test');
+var hourlySchedule = schedule.scheduleJob("*/1 * * *", scraper.scheduleHourly);
 // var testSchedule = schedule.scheduleJob("*/1 * * * *", scraper.scheduleTest);
 // var minuteSchedule = schedule.scheduleJob("*/1 * * * *", scraper.scheduleTest);
 //var hourlySchedule = schedule.scheduleJob("*/1 * * *", scraper.scheduleHourly);

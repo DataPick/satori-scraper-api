@@ -18,6 +18,8 @@ exports.getPages = (req, res, next) => {
 
 /*
  * Create a new page
+ * Each page corresponds to a url to be scraped. On each page are one or more 
+ * 'items' that contain individual data points to be tracked,
  */
 exports.createPage = (req, res, next) => {
 
