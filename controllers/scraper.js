@@ -39,7 +39,7 @@ var scrapePage = exports.scrapePage = (page, callback) => {
                 // Find all regular fields in a box.
                 fields = page.fields.map(function(field) {
                     var element = $($(boxes[i]).find(field.selector));
-                    if (field.name === "link" && element[0].nodeName === 'A' && element.attr('href'))
+                    if (field.name === "link" && element[0].nodeName === 'a' && element.attr('href'))
                         return { key: field.name, value: element.attr('href')};
                     
                     return { key: field.name, value: $(boxes[i]).find(field.selector).contents().not($(boxes[i]).find(field.selector).children()).text().trim()};
