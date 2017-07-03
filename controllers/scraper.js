@@ -10,6 +10,10 @@ exports.scheduleHourly = () => {
     findUpdates('hourly');
 };
 
+exports.scheduleMinute = () => {
+    findUpdates('minute');
+};
+
 /*
  * Find updates only once.
  */

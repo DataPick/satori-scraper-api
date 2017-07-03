@@ -10,6 +10,9 @@ var rtm = new RTM(config.endpoint, config.appkey, {
 
 rtm.start();
 
+/*
+ * Publish list of items when a page is created.
+ */
 exports.publishNewItems = (req, res, next) => {
 
     // create a new subscription with "data-channel" name
@@ -19,9 +22,13 @@ exports.publishNewItems = (req, res, next) => {
 
         var message = {
             name: item.name,
+            image: item.image,
             url: item.url,
-            fields: item.fields
         };
+
+        item.fields.forEach(function(field) {
+            message[field.key] = field.value;
+        });
 
         rtm.publish(config.channel, message);
 
@@ -31,27 +38,35 @@ exports.publishNewItems = (req, res, next) => {
     return res.sendStatus(200);
 };
 
+/*
+ * Publish a new item found during a page update.
+ */
 exports.publishNewItem = (item) => {
 
     var newItem = {
         name: item.name,
+        image: item.image,
         url: item.url,
-        fields: item.fields
     };
+
+    item.fields.forEach(function(field) {
+        newItem[field.key] = field.value;
+    });
 
     rtm.publish(config.channel, newItem);
 };
 
-
+/*
+ * Publish an update to an item to satori channel.
+ */
 exports.publishUpdate = (item, updates) => {
 
     var message = {
         name: item.name,
         url: item.url,
-        fields: item.fields,
         updates: updates
     };
 
     rtm.publish(config.channel, message);
-
 };
+

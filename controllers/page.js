@@ -23,6 +23,8 @@ exports.getPages = (req, res, next) => {
  */
 exports.createPage = (req, res, next) => {
 
+    // TODO: Validate data.
+
     var pageData = {
         url: req.body.url,
         boxSelector: req.body.boxSelector,

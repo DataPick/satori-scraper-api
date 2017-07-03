@@ -12,6 +12,8 @@ exports.checkItems = (page) => {
     console.log('Checking items from ' + page.url);
 
     var items = scraper.scrapePage(page, function(newItems) {
+
+        // New items include potential updates scraped from the web.
         newItems.forEach(function (newItem) {
 
             var query = {
@@ -19,13 +21,14 @@ exports.checkItems = (page) => {
                 name: newItem.name
             };
 
+            // Old items represent the items as they exist now in the database
             Item.find(query, (err, oldItems) => {
                 if (err) console.log(err);
 
                 // Check that item existed in database. If not, create a new record for it
                 else if (!oldItems || oldItems.length === 0) {
 
-                    // Create item
+                    // Create item if it doesn't already exist.
                     var item = newItem;
                     item.url = page.url;
 
@@ -48,6 +51,7 @@ exports.checkItems = (page) => {
 
                     if (oldItems.length === 1) oldItem = oldItems[0];
                     else {
+                        console.log("More than one item with this name");
                         oldItems.forEach(function(item) {
                             if (item.image == newItem.image) oldItem = item;
                         });
@@ -57,7 +61,11 @@ exports.checkItems = (page) => {
                     var updates = [];
                     newItem.fields.forEach(function (field, index) {
                         if (field.value != oldItem.fields[index].value) {
-                            updates.push({key: field.key, newValue: field.value, oldValue: oldItem.fields[index].value});
+                            updates.push({
+                                key: field.key, 
+                                newValue: field.value, 
+                                oldValue: oldItem.fields[index].value
+                            });
                             console.log('Update to \'' + field.key + '\' in ' + oldItem.name + ': ' + oldItem.fields[index].value + ' > ' + field.value);
                         }
                     });
