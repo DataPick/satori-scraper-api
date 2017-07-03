@@ -61,8 +61,13 @@ exports.publishUpdate = (item, updates) => {
 
     var message = {
         name: item.name,
+        image: item.image,
         updates: updates
     };
+
+    item.fields.forEach(function(field) {
+        message[field.key] = field.value;
+    });
 
     rtm.publish(config.channel, message);
 };
