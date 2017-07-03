@@ -38,12 +38,12 @@ var scrapePage = exports.scrapePage = (page, callback) => {
 
                 // Find all regular fields in a box.
                 fields = page.fields.map(function(field) {
-                    return { key: field.name, value: $(boxes[i]).find(field.selector).contents().get(0).nodeValue};
+                    return { key: field.name, value: $(boxes[i]).find(field.selector).contents().not($(boxes[i]).find(field.selector)).text().trim()};
                 });
 
                 // Finally construct the item with name, image(optional), and field.s
                 items[i] = {
-                    name: $(boxes[i]).find(page.nameSelector).contents().get(0).nodeValue,
+                    name: $(boxes[i]).find(page.nameSelector).contents().not($(boxes[i]).find(page.nameSelector)).text().trim(),
                     image: $(boxes[i]).find(page.imageSelector).attr('src'),
                     fields: fields
                 }
