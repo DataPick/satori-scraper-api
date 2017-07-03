@@ -22,8 +22,7 @@ exports.publishNewItems = (req, res, next) => {
 
         var message = {
             name: item.name,
-            image: item.image,
-            url: item.url,
+            image: item.image
         };
 
         item.fields.forEach(function(field) {
@@ -45,8 +44,7 @@ exports.publishNewItem = (item) => {
 
     var newItem = {
         name: item.name,
-        image: item.image,
-        url: item.url,
+        image: item.image
     };
 
     item.fields.forEach(function(field) {
@@ -63,7 +61,6 @@ exports.publishUpdate = (item, updates) => {
 
     var message = {
         name: item.name,
-        url: item.url,
         updates: updates
     };
 
